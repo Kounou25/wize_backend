@@ -28,3 +28,18 @@ CREATE TABLE messageries(
     status VARCHAR(50) DEFAULT 'pending',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+CREATE TABLE bagages (
+    id_bagage SERIAL PRIMARY KEY,
+    voyage_id INTEGER NOT NULL,
+    type_bagage VARCHAR(100) NOT NULL,
+    nombre INTEGER NOT NULL DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_voyage
+        FOREIGN KEY (voyage_id)
+        REFERENCES voyages(id_voyage)
+        ON DELETE CASCADE
+);
