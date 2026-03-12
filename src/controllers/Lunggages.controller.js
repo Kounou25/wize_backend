@@ -1,21 +1,42 @@
 const pool = require("../config/db");
 
 
-// CREATE
+
+// CREATE (single or multiple bagages)
 exports.createBagage = async (req, res) => {
   try {
-    const { voyage_id, type_bagage, nombre } = req.body;
+    const { voyage_id, type_bagage, nombre, bagages } = req.body;
 
-    const result = await pool.query(
-      `INSERT INTO bagages (voyage_id, type_bagage, nombre)
-       VALUES ($1,$2,$3)
-       RETURNING *`,
-      [voyage_id, type_bagage, nombre]
-    );
+    let inserted = [];
 
-    res.status(201).json(result.rows[0]);
+    if (Array.isArray(bagages)) {
+      // Cas multiple bagages
+      for (const b of bagages) {
+        const result = await pool.query(
+          `INSERT INTO bagages (voyage_id, type_bagage, nombre)
+           VALUES ($1, $2, $3)
+           RETURNING *`,
+          [b.voyage_id || voyage_id, b.type, b.nombre]
+        );
+        inserted.push(result.rows[0]);
+      }
+    } else if (voyage_id && type_bagage && nombre != null) {
+      // Cas unique bagage
+      const result = await pool.query(
+        `INSERT INTO bagages (voyage_id, type_bagage, nombre)
+         VALUES ($1, $2, $3)
+         RETURNING *`,
+        [voyage_id, type_bagage, nombre]
+      );
+      inserted.push(result.rows[0]);
+    } else {
+      return res.status(400).json({ error: "Données invalides" });
+    }
+
+    res.status(201).json(inserted);
 
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
