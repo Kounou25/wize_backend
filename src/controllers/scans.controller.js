@@ -48,7 +48,7 @@ exports.createScan = async (req, res) => {
 
   try {
     const cardCheck = await pool.query(
-      `SELECT * FROM cards WHERE id = $1`,
+      `SELECT * FROM cards WHERE card_id = $1`,
       [scanned_card]
     );
 

@@ -48,15 +48,9 @@ CREATE TABLE cards(
 -- TABLE SCANS
 CREATE TABLE scans(
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    scanned_card UUID,
+    scanned_card TEXT,
     scanned_by UUID,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_card
-    FOREIGN KEY (scanned_card)
-    REFERENCES cards(id)
-    ON DELETE SET NULL,
-
     CONSTRAINT fk_user_scan
     FOREIGN KEY (scanned_by)
     REFERENCES users(id)
