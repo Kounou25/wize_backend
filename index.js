@@ -6,6 +6,8 @@ const agencesRoutes = require('./src/routes/agences.routes');
 const usersRoutes = require('./src/routes/users.routes');
 const authRoutes = require('./src/routes/auth.routes');
 const cardRoutes = require("./src/routes/card.routes");
+const scanRoutes = require("./src/routes/scans.route");
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,6 +20,8 @@ app.use("/lunggages", bagageRoutes);
 app.use('/agences', agencesRoutes);
 app.use('/users', usersRoutes);
 app.use("/cards", cardRoutes);
+app.use("/scans", cardRoutes);
+
 
 
 app.listen(PORT, () => {
