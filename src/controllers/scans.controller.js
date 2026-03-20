@@ -73,7 +73,7 @@ exports.createScan = async (req, res) => {
 
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Erreur serveur", err });
+    res.status(500).json({ error: err, err });
   }
 };
 
