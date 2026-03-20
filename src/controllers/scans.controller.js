@@ -43,6 +43,7 @@ exports.getScanById = async (req, res) => {
 
 exports.createScan = async (req, res) => {
   const { scanned_card } = req.body;
+  console.log(scanned_card);
   const scanned_card_clear = scanned_card.trim();
 
   const scanned_by = req.user.id; 
@@ -62,7 +63,7 @@ exports.createScan = async (req, res) => {
       `INSERT INTO scans (scanned_card, scanned_by)
        VALUES ($1, $2)
        RETURNING *`,
-      [scanned_card, scanned_by]
+      [scanned_card_clear, scanned_by]
     );
 
     res.status(201).json({
