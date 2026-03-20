@@ -85,38 +85,37 @@ const createVoyage = async (req, res) => {
 // PUT /voyages/:id — mettre à jour un voyage
 const updateVoyage = async (req, res) => {
   const { id } = req.params;
-  const {
-    nomClient,
-    phone,
-    ville_dep,
-    ville_arr,
-    date_dep,
-    nbr_place,
-    total_price,
-    status,
-  } = req.body;
+  const updates = req.body;
+
+  const fields = [];
+  const values = [];
+  let i = 1;
+
+  for (const key in updates) {
+    fields.push(`${key} = $${i}`);
+    values.push(updates[key]);
+    i++;
+  }
+
+  if (fields.length === 0) {
+    return res.status(400).json({ error: "Aucun champ à mettre à jour" });
+  }
 
   try {
     const result = await pool.query(
-      `UPDATE voyages
-       SET nomClient = $1, phone = $2, ville_dep = $3, ville_arr = $4,
-           date_dep = $5, nbr_place = $6, total_price = $7, status = $8
-       WHERE id_voyage = $9
-       RETURNING *`,
-      [nomClient, phone, ville_dep, ville_arr, date_dep, nbr_place, total_price, status, id]
+      `UPDATE voyages SET ${fields.join(", ")} WHERE id_voyage = $${i} RETURNING *`,
+      [...values, id]
     );
+
     if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Voyage not found' });
+      return res.status(404).json({ error: "Voyage not found" });
     }
+
     res.json(result.rows[0]);
   } catch (err) {
-    if (err.code === '23505') {
-      return res.status(409).json({ error: 'Phone number already exists' });
-    }
     res.status(500).json({ error: err.message });
   }
 };
-
 // DELETE /voyages/:id — supprimer un voyage
 const deleteVoyage = async (req, res) => {
   const { id } = req.params;
