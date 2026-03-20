@@ -20,7 +20,7 @@ app.use("/lunggages", bagageRoutes);
 app.use('/agences', agencesRoutes);
 app.use('/users', usersRoutes);
 app.use("/cards", cardRoutes);
-app.use("/scans", cardRoutes);
+app.use("/scans", scanRoutes);
 
 
 
