@@ -43,13 +43,14 @@ exports.getScanById = async (req, res) => {
 
 exports.createScan = async (req, res) => {
   const { scanned_card } = req.body;
+  const scanned_card_clear = scanned_card.trim();
 
   const scanned_by = req.user.id; 
 
   try {
     const cardCheck = await pool.query(
       `SELECT * FROM cards WHERE card_id = $1`,
-      [scanned_card]
+      [scanned_card_clear]
     );
 
     if (cardCheck.rows.length === 0) {
