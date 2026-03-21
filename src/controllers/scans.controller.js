@@ -9,7 +9,6 @@ exports.getAllScans = async (req, res) => {
         cards.card_id,
         users.full_name AS scanned_by_name
       FROM scans
-      LEFT JOIN cards ON cards.id = scans.scanned_card
       LEFT JOIN users ON users.id = scans.scanned_by
       ORDER BY scans.created_at DESC
     `);
